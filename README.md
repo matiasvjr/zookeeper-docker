@@ -125,3 +125,16 @@ This image is configured with volumes at `/data` and `/datalog` to hold the Zook
 # License
 
 View [license information](https://github.com/apache/zookeeper/blob/release-3.4.10/LICENSE.txt) for the software contained in this image.
+
+### Trouble shooting
+
+- Zookeeper boot failure cause of k8s virtual ip 
+
+```sh
+        - name: ZOO_SERVERS
+          # notices!!! k8s use virtual ip, ZOO_SERVERS variables value local pod must use 0.0.0.0 as the ip address, can not use hostname.
+          # Otherwise ilocal pod zookeeper will boot failure and throw this exception:
+          # ERROR [zk1/10.0.0.251:3888:QuorumCnxManager$Listener@547] - Exception while listening
+          # java.net.BindException: Address not available (Bind failed)
+          value: server.1=0.0.0.0:2888:3888 server.2=zk2:2888:3888 server.3=zk3:2888:3888
+```
